@@ -165,6 +165,7 @@ The current application is a portfolio-ready local demo, not a production recomm
 - Add tag-genome explanations, approximate nearest-neighbor retrieval, event logging, and saved model-artifact versioning.
 - Add automated UI smoke tests for movie selection, recommendation generation, controls, dashboard, and methodology pages.
 - Add a lightweight database-backed feedback loop so likes, dislikes, watched items, and more-like-this events can be replayed in evaluation.
+- Add interactive UI tweaks to allow users to hot-swap and compare different backend recommendation models (including offline baselines) directly in the web app to see the difference between models.
 
 ### Screenshots
 
