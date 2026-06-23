@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Local environments and IDE files
+.venv/
+venv/
+env/
+.idea/
+.vscode/
+
+# Frontend dependencies and builds
+node_modules/
+app/frontend/node_modules/
+dist/
+app/frontend/dist/
+
+# Logs and local runtime output
+*.log
+app/backend/*.log
+
+# Auto-generated project structure dumps (large, regeneratable)
+project_structure.txt
+structure.txt
+
+# Large raw datasets should be downloaded locally, not committed
+data/raw/
+
+# Surprise cache
+.surprise_data/
+
+# OS files
+.DS_Store
+Thumbs.db
+

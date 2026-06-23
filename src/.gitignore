@@ -1,0 +1,59 @@
+# -------------------------
+# Python
+# -------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+.jupyter/
+
+# Logs and temp files
+*.log
+*.tmp
+*.temp
+*.swp
+.DS_Store
+
+# -------------------------
+# PyCharm / IDE
+# -------------------------
+.idea/
+.vscode/
+
+# -------------------------
+# Data — large files (kept local, not in git)
+# -------------------------
+data/raw/
+!data/raw/README.md   # allow a small README in that folder
+
+data/processed/
+!data/processed/README.md
+
+# Models (if you save any later)
+models/
+
+# -------------------------
+# Reports / figures
+# -------------------------
+reports/figures/
+!reports/figures/README.md
+
+# -------------------------
+# OS-specific (Windows / macOS)
+# -------------------------
+Thumbs.db
+ehthumbs.db
+desktop.ini

@@ -1,0 +1,14 @@
+pandas
+numpy>=1.26
+scikit-learn
+scikit-surprise
+matplotlib
+seaborn
+tqdm
+pyyaml
+jupyter
+notebook
+pyarrow
+fastapi
+uvicorn[standard]
+pydantic
