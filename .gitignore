@@ -34,7 +34,9 @@ data/raw/
 # Surprise cache
 .surprise_data/
 
+# Generated plot duplicates
+data/figures/
+
 # OS files
 .DS_Store
 Thumbs.db
-
