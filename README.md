@@ -166,16 +166,36 @@ The current application is a portfolio-ready local demo, not a production recomm
 - Add automated UI smoke tests for movie selection, recommendation generation, controls, dashboard, and methodology pages.
 - Add a lightweight database-backed feedback loop so likes, dislikes, watched items, and more-like-this events can be replayed in evaluation.
 
-### Screenshot checklist
+### Screenshots
 
-Add final portfolio screenshots manually when the UI is ready. Recommended files:
+Here is a visual walkthrough of the product UI:
 
-- `resources/screenshots/01-landing-page.png`
-- `resources/screenshots/02-movie-selection.png`
-- `resources/screenshots/03-recommendations.png`
-- `resources/screenshots/04-controls.png`
-- `resources/screenshots/05-dashboard-metrics.png`
-- `resources/screenshots/06-methodology.png`
+**1. Landing Page**
+![Landing Page](resources/landing.png)
+
+**2. Movie Selection**
+![Movie Selection](resources/movie_selection_landing.png)
+
+**3. Selected Movies**
+![Selected Movies](resources/movie%20_selected.png)
+
+**4. Recommendations**
+![Recommendations](resources/recommendations.png)
+
+**5. Controls**
+![Controls](resources/controls.png)
+
+**6. Dashboard**
+![Dashboard](resources/dashboard.png)
+
+**7. Metrics**
+![Metrics](resources/metrics.png)
+
+**8. Graphs**
+![Graphs](resources/graphs.png)
+
+**9. Methodology**
+![Methodology](resources/Methodology.png)
 
 ---
 
