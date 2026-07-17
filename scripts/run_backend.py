@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 
 import uvicorn
@@ -8,6 +9,7 @@ import uvicorn
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SURPRISE_DIR = PROJECT_ROOT / ".surprise_data"
+sys.path.insert(0, str(PROJECT_ROOT))
 
 
 def main() -> None:
