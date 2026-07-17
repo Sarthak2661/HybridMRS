@@ -15,13 +15,13 @@ export default function Home({ setActiveTab, metrics, selectedCount }) {
             <div className="max-w-3xl text-white">
               <div className="reveal inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-3 py-1 text-sm backdrop-blur">
                 <ShieldCheck size={16} />
-                Evaluation-first recommender system
+                Recommender demo with offline evaluation
               </div>
               <h2 className="reveal mt-5 text-4xl font-semibold leading-tight md:text-6xl">
-                Personalized movie discovery with transparent model signals.
+                A movie recommender you can actually inspect.
               </h2>
               <p className="reveal mt-5 max-w-2xl text-base leading-7 text-white/85 md:text-lg">
-                Rate films, tune collaborative versus content signals, inspect explanations, and compare model metrics without hiding weak results.
+                Pick movies you like, tune the ranking mix, read the explanations, and compare the live results with saved offline metrics.
               </p>
               <div className="reveal mt-7 flex flex-wrap gap-3">
                 <button
@@ -66,15 +66,15 @@ export default function Home({ setActiveTab, metrics, selectedCount }) {
       <section className="grid gap-4 md:grid-cols-4">
         <HomeStat icon={Film} label="Catalog-aware" value="MovieLens" />
         <HomeStat icon={Layers3} label="Hybrid candidate pool" value="CF + Content + Popular" />
-        <HomeStat icon={Gauge} label="Best recorded model" value={best?.model ?? "Run metrics"} />
+        <HomeStat icon={Gauge} label="Best saved model" value={best?.model ?? "Run metrics"} />
         <HomeStat icon={ShieldCheck} label="Selected movies" value={String(selectedCount)} />
       </section>
 
       <section className="grid gap-5 lg:grid-cols-3">
         {[
-          ["1", "Onboard taste", "Search, rate movies, and choose favorite genres to build a session profile."],
-          ["2", "Tune the model", "Adjust alpha, novelty, genre filters, year range, and watched exclusion."],
-          ["3", "Inspect evidence", "Read explanations and compare Precision@10, Recall@10, NDCG@10, diversity, and novelty."]
+          ["1", "Build a profile", "Search, rate movies, and choose favorite genres to give the session a starting point."],
+          ["2", "Adjust ranking", "Change alpha, novelty, genre filters, year range, and watched exclusion."],
+          ["3", "Check the results", "Read the explanations and compare the live list with the saved offline metrics."]
         ].map(([step, title, copy]) => (
           <article key={step} className="lift-card rounded-lg border border-slate-200 bg-white p-5">
             <span className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-moss text-sm font-semibold text-white">{step}</span>

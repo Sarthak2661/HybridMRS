@@ -5,7 +5,7 @@
 ![React](https://img.shields.io/badge/React-frontend-61DAFB?logo=react&logoColor=0b1020)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-A hybrid movie recommender built on MovieLens 32M, with an offline evaluation pipeline and a small full-stack demo for exploring the results.
+This project started as a recommender-systems exercise and gradually turned into a small full-stack movie recommendation demo. It uses MovieLens 32M for the offline evaluation work and a lightweight serving layer for the interactive app.
 
 ## Live demo
 
@@ -15,7 +15,7 @@ A hybrid movie recommender built on MovieLens 32M, with an offline evaluation pi
 
 ## Why this project matters
 
-Many recommendation projects stop at a notebook or a single algorithm score. This one is designed to show the full shape of applied ML work:
+I wanted this project to show more than a model notebook or a single metric screenshot. The useful part, at least for me, was building the pieces around the model too:
 
 - a measurable offline evaluator instead of only a polished UI
 - a user-facing product demo instead of only training scripts
@@ -23,7 +23,7 @@ Many recommendation projects stop at a notebook or a single algorithm score. Thi
 - explainable ranking signals so a reviewer can inspect why the system made each suggestion
 - deployable frontend and backend services rather than a local-only prototype
 
-For a portfolio, that makes the project more representative of real recommender-system work: modeling, evaluation, serving, product decisions, and communication.
+That makes it a better portfolio piece because it touches the parts that usually show up in real work too: modeling, evaluation, serving, UI decisions, and explaining tradeoffs clearly.
 
 ## Architecture
 
@@ -77,7 +77,7 @@ scripts/      utilities such as poster fetching
 
 ## Local setup
 
-There are two dependency paths:
+There are two dependency paths here:
 
 - `requirements-api.txt` for the deployable FastAPI app
 - `requirements.txt` for the full project, including offline training, notebooks, charts, and evaluation scripts
@@ -107,7 +107,7 @@ http://localhost:5173
 
 ### Full project setup
 
-If you want the offline training and evaluation pipeline too:
+If you want to run the offline training and evaluation code as well:
 
 ```bash
 pip install -r requirements.txt
@@ -130,16 +130,16 @@ That script checks:
 
 ### Why the API has a slim requirements file
 
-The serving API does not need the full offline stack. In particular, `scikit-surprise`, notebooks, and plotting libraries are only needed for training and evaluation, not for the deployed FastAPI service. Keeping API dependencies separate makes local setup simpler and hosted deployment more reliable.
+The serving API does not need the whole offline stack. In practice, `scikit-surprise`, notebooks, and plotting libraries are only used for training and evaluation, not for the deployed FastAPI service. Splitting those dependencies keeps local setup lighter and makes hosted deploys less fragile.
 
 ## Deployment
 
-The simplest split for this project is:
+The cleanest split for this project is:
 
 - frontend on Vercel
 - backend API on Render
 
-That matches the current codebase well because the frontend is a Vite app and the backend is a standalone FastAPI service.
+That fits the current codebase pretty naturally because the frontend is a Vite app and the backend is a standalone FastAPI service.
 
 ### Backend on Render
 
@@ -193,7 +193,7 @@ are committed and available in the deployed repo
 
 ### One practical note
 
-The current `scripts/run_backend.py` is now flexible enough for both local and hosted use because it reads `HOST` and `PORT` from environment variables, but for Render the direct `uvicorn ... --host 0.0.0.0 --port $PORT` start command is still the clearest production setup.
+The local `scripts/run_backend.py` runner now works for both local use and simple hosted setups because it reads `HOST` and `PORT` from environment variables. For Render though, the direct `uvicorn ... --host 0.0.0.0 --port $PORT` command is still the clearest production setup.
 
 ## Portfolio release
 
@@ -201,7 +201,7 @@ Current portfolio tag:
 
 - `v1.0-portfolio-demo`
 
-This release represents the first fully deployed portfolio version with:
+This release is the first fully deployed portfolio version of the project, with:
 
 - live frontend and backend links
 - offline benchmark dashboard
@@ -217,6 +217,7 @@ GET  /genres
 POST /recommend
 POST /feedback
 GET  /metrics
+GET  /monitoring
 ```
 
 Example request:
@@ -240,7 +241,7 @@ Example request:
 
 ## Offline evaluation vs live demo
 
-The project deliberately separates two things:
+The project keeps two different concerns separate, and that distinction is intentional:
 
 ### Offline evaluator
 
@@ -258,11 +259,37 @@ Relevant item definition:
 
 - test rating `>= 4.0`
 
-The current saved benchmark uses `100` sampled users, so the dashboard shows confidence intervals and the results should be treated as a small-sample benchmark, not a production claim.
+The current saved benchmark in the repo uses `100` sampled users, so the dashboard confidence intervals should still be read as a small benchmark rather than a broad production claim. A better next step is to rerun the same pipeline at larger sample sizes and compare how stable the headline metrics stay.
+
+### Evaluation sample-size check
+
+One useful way to make the offline benchmark more credible is to rerun it at larger user counts and compare the best test result from each run.
+
+You can generate that summary with:
+
+```bash
+python scripts/benchmark_sample_sizes.py --sample-sizes 100 500 1000
+```
+
+This writes:
+
+```text
+data/processed/evaluation_sample_size_summary.csv
+```
+
+Recommended summary table:
+
+| Sample size | Precision@10 | Recall@10 | NDCG@10 | Hit Rate@10 | Runtime |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 100 | 0.008 | 0.080 | 0.050 | 0.080 | pending local rerun |
+| 500 | pending | pending | pending | pending | pending |
+| 1000 | pending | pending | pending | pending | pending |
+
+The current 100-user row above reflects the best saved test row in `model_comparison_metrics.csv` (`Hybrid history-alpha`). The 500-user and 1,000-user rows should be filled with actual rerun results rather than guessed numbers.
 
 ### Live interactive demo
 
-The web demo uses a lightweight serving layer for fast local recommendations. It blends:
+The web demo uses a lightweight serving layer so recommendations stay fast. It blends:
 
 - content similarity
 - rating-prior scoring
@@ -271,7 +298,14 @@ The web demo uses a lightweight serving layer for fast local recommendations. It
 - negative feedback subtraction
 - explanation tags
 
-That keeps the demo fast without mixing it up with the offline benchmark.
+That keeps the interactive demo responsive without pretending it is the same thing as the offline benchmark.
+
+In short:
+
+- offline metrics answer "how did these models perform on hidden future-liked movies?"
+- live demo metrics answer "what does this current recommendation list look like right now?"
+
+They are related, but they are not interchangeable.
 
 ## Real poster metadata
 
@@ -337,11 +371,25 @@ Recommended enrichments:
 
 ## Limitations and next steps
 
-- expand offline evaluation beyond the current 100-user sample
-- add persistent sessions with SQLite or PostgreSQL
-- add a full model card covering biases, cold-start behavior, intended use, and non-goals
-- containerize backend and frontend with Docker
-- deploy the frontend and API to hosted services
+Short-term improvements that fit the current version:
+
+- expand offline evaluation beyond the current 100-user sample and keep a sample-size summary for 100, 500, and 1,000-user runs
+- keep the offline/live distinction explicit in the UI and README so benchmark metrics and interactive demo metrics are not confused
+- add a full model card covering data source, evaluation protocol, intended use, known biases, cold-start behavior, and non-goals
+- add Docker containerization for the backend and frontend so local setup and deployment are reproducible
+- add GitHub Actions CI for API tests, a frontend build check, and a lightweight smoke test
+- extend the current request logging and `/monitoring` endpoint with simple rate limiting and more durable external monitoring if the project grows
+- keep improving the evaluation section with cold-start analysis, popularity-bias discussion, and clearer reporting of diversity, novelty, and coverage metrics
+
+Next-version product and platform work:
+
+- add session-based and user-based persistence with PostgreSQL or Supabase for the deployed version
+- store recommendation feedback in tables such as `users`, `user_likes`, `user_dislikes`, `watched_movies`, `recommendation_events`, and `feedback_events`
+- track experiments with MLflow and keep saved model artifacts for reproducible offline runs
+- move from a stateless demo toward a version where feedback can improve recommendations over time
+
+Longer-term ML and retrieval work:
+
 - expand the content model from genre-first recommendations to a richer mixed profile using genres, tags, year, and rating priors first, then add cast/director similarity through TMDB or IMDb metadata enrichment
 - add richer tag-genome explanations and approximate nearest-neighbor retrieval
 

@@ -8,7 +8,7 @@ export default function About() {
         <p className="text-sm font-semibold uppercase tracking-wide text-moss">Methodology</p>
         <h2 className="mt-1 text-3xl font-semibold">How the recommender works</h2>
         <p className="mt-3 max-w-4xl text-sm leading-6 text-slate-700">
-          This page explains what the app is doing, how the saved benchmark is measured, and why the live metrics mean something different.
+          This page gives the plain-English version of what the app is doing, how the saved benchmark was measured, and why the live metrics mean something a little different.
         </p>
       </section>
 
@@ -39,7 +39,7 @@ export default function About() {
         <div className="soft-panel rounded-lg p-6">
           <h3 className="text-xl font-semibold">Offline evaluator vs live demo</h3>
           <p className="mt-3 text-sm leading-6 text-slate-700">
-            This project has two parts. The offline evaluator is for measurement: it compares popularity, genre, content, CF SVD, and hybrid models on historical MovieLens ratings. The live demo is for interaction: it reacts quickly to selected movies, filters, feedback, and slider changes.
+            There are really two parts here. The offline evaluator is for measurement: it compares popularity, genre, content, CF SVD, and hybrid models on historical MovieLens ratings. The live demo is for interaction: it reacts quickly to selected movies, filters, feedback, and slider changes.
           </p>
           <div className="mt-5 grid gap-3 md:grid-cols-2">
             <ControlExplain title="Offline evaluator" copy="Uses chronological per-user holdout. Older ratings are used as known history, then future liked movies are hidden and checked against top-10 recommendations." />
@@ -62,10 +62,10 @@ export default function About() {
       </section>
 
       <section className="soft-panel rounded-lg p-6">
-        <h3 className="text-xl font-semibold">How model quality is evaluated</h3>
-        <p className="mt-3 max-w-5xl text-sm leading-6 text-slate-700">
-          The evaluator follows a simple setup. For each sampled user, it trains on older ratings, hides later movies the user liked, recommends 10 unseen movies, and checks whether those hidden likes show up near the top. The current saved benchmark uses 100 users, so the confidence intervals matter as much as the point estimates.
-        </p>
+          <h3 className="text-xl font-semibold">How model quality is evaluated</h3>
+          <p className="mt-3 max-w-5xl text-sm leading-6 text-slate-700">
+          The evaluator uses a straightforward setup. For each sampled user, it trains on older ratings, hides later movies the user liked, recommends 10 unseen movies, and checks whether those hidden likes show up near the top. The current saved benchmark uses 100 users, so the confidence intervals matter at least as much as the point estimates.
+          </p>
         <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <MetricExplain title="Top-10 Accuracy" copy="Of the 10 recommended movies, this estimates how many were truly relevant hidden likes." />
           <MetricExplain title="Liked Movies Found" copy="Of the future-liked movies hidden from the model, this shows how many were recovered in the recommendation list." />
@@ -75,10 +75,10 @@ export default function About() {
       </section>
 
       <section className="soft-panel rounded-lg p-6">
-        <h3 className="text-xl font-semibold">How recommendations are built in this app</h3>
-        <p className="mt-3 text-sm leading-6 text-slate-700">
+          <h3 className="text-xl font-semibold">How recommendations are built in this app</h3>
+          <p className="mt-3 text-sm leading-6 text-slate-700">
           In the demo, selected genres refresh the starter movie pool and the chosen ratings shape the taste profile. The backend builds a rating-weighted profile, looks for unseen movies with similar features, mixes that with a Bayesian rating prior, gives a bit more weight to specific genres, and then applies the balance and discovery controls. Feedback updates the current session by boosting similar items, reducing movies like the ones you hid or disliked, and excluding watched titles.
-        </p>
+          </p>
         <div className="mt-5 grid gap-4 md:grid-cols-3">
           <ControlExplain title="Taste profile" copy="Built from the 10 selected/rated movies, up to 3 favorite genres, and the visitor's ongoing feedback actions." />
           <ControlExplain title="Hybrid ranking" copy="Blends rating-weighted content similarity with Bayesian rating-prior and collaborative-style signals, then applies filters and novelty preference." />
