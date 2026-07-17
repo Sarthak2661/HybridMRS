@@ -1,0 +1,7 @@
+pandas
+numpy>=1.26
+scikit-learn
+pyarrow
+fastapi
+uvicorn[standard]
+pydantic

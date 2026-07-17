@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: hybrid-mrs-api
+    runtime: python
+    rootDir: .
+    buildCommand: pip install -r requirements-api.txt
+    startCommand: uvicorn app.backend.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: SURPRISE_DATA_FOLDER
+        value: /opt/render/project/src/.surprise_data
+

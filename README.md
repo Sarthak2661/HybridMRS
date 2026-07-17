@@ -44,19 +44,21 @@ scripts/      utilities such as poster fetching
 
 ## Local setup
 
-Install backend dependencies:
+There are two dependency paths:
+
+- `requirements-api.txt` for the deployable FastAPI app
+- `requirements.txt` for the full project, including offline training, notebooks, charts, and evaluation scripts
+
+### Quick start for the demo
+
+Backend in one terminal:
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-api.txt
+python scripts/run_backend.py
 ```
 
-Run the backend:
-
-```bash
-uvicorn app.backend.main:app --reload --port 8000
-```
-
-Run the frontend:
+Frontend in a second terminal:
 
 ```bash
 cd app/frontend
@@ -64,11 +66,101 @@ pnpm install
 pnpm dev
 ```
 
-Then open:
+Open:
 
 ```text
 http://localhost:5173
 ```
+
+### Full project setup
+
+If you want the offline training and evaluation pipeline too:
+
+```bash
+pip install -r requirements.txt
+```
+
+### Backend smoke test
+
+After the backend is running, you can verify the core API endpoints with:
+
+```bash
+python scripts/smoke_test_api.py
+```
+
+That script checks:
+
+- `/health`
+- `/genres`
+- `/movies/search`
+- `/metrics`
+
+### Why the API has a slim requirements file
+
+The serving API does not need the full offline stack. In particular, `scikit-surprise`, notebooks, and plotting libraries are only needed for training and evaluation, not for the deployed FastAPI service. Keeping API dependencies separate makes local setup simpler and hosted deployment more reliable.
+
+## Deployment
+
+The simplest split for this project is:
+
+- frontend on Vercel
+- backend API on Render
+
+That matches the current codebase well because the frontend is a Vite app and the backend is a standalone FastAPI service.
+
+### Backend on Render
+
+This repo now includes [render.yaml](render.yaml) for the API service.
+
+Render expects Python web services to bind to `0.0.0.0` and the platform `PORT`, which is why the production start command uses:
+
+```bash
+uvicorn app.backend.main:app --host 0.0.0.0 --port $PORT
+```
+
+Recommended Render setup:
+
+- Build command: `pip install -r requirements-api.txt`
+- Start command: `uvicorn app.backend.main:app --host 0.0.0.0 --port $PORT`
+- Health check path: `/health`
+
+The official Render docs for FastAPI and Python web services are here:
+
+- [Deploy a FastAPI App](https://render.com/docs/deploy-fastapi)
+- [Render Web Services](https://render.com/docs/web-services)
+- [Setting Your Python Version](https://render.com/docs/python-version)
+
+### Frontend on Vercel
+
+The frontend can be deployed from `app/frontend`. This repo now includes [app/frontend/vercel.json](app/frontend/vercel.json) so Vercel recognizes the Vite app more explicitly.
+
+Before deploying, set:
+
+- `VITE_API_BASE=https://your-render-api-url.onrender.com`
+
+Then deploy the frontend directory as a Vite project.
+
+Official Vercel references:
+
+- [Vite on Vercel](https://vercel.com/docs/frameworks/frontend/vite)
+- [Deploying to Vercel](https://vercel.com/docs/deployments/overview)
+
+### Production checklist
+
+Before calling it deployed, make sure:
+
+- the Render service returns `200` from `/health`
+- `VITE_API_BASE` points to the live backend URL
+- CORS in `app/backend/main.py` includes your frontend domain
+- `data/processed/ml32m_basic_movie_features.parquet`
+- `data/processed/model_comparison_metrics.csv`
+- `data/processed/movie_posters.csv`
+
+are committed and available in the deployed repo
+
+### One practical note
+
+The current `scripts/run_backend.py` is now flexible enough for both local and hosted use because it reads `HOST` and `PORT` from environment variables, but for Render the direct `uvicorn ... --host 0.0.0.0 --port $PORT` start command is still the clearest production setup.
 
 ## API overview
 
