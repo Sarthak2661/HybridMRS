@@ -28,6 +28,13 @@ def extract_year_from_title(title: str) -> Optional[int]:
         return None
 
 
+def normalize_genre_string(value: object) -> str:
+
+    if not isinstance(value, str) or not value or value == "(no genres listed)":
+        return ""
+    return value
+
+
 def build_basic_movie_features(
     n_rating_rows: int = 16_000_000,
     min_rating_count: int = 20,
@@ -71,12 +78,11 @@ def build_basic_movie_features(
 
     # 6) Process genre strings into lists
     print("Processing genres ...")
-    df["genres"] = df["genres"].replace("(no genres listed)", np.nan)
+    df["genres"] = df["genres"].apply(normalize_genre_string)
 
     # Convert "Action|Comedy|..." -> ["Action", "Comedy", ...]
     df["genre_list"] = (
         df["genres"]
-        .fillna("")
         .apply(lambda g: g.split("|") if g else [])
     )
 
@@ -103,6 +109,8 @@ def build_basic_movie_features(
                 [
                     "movieId",
                     "title",
+                    "genres",
+                    "genre_list",
                     "year",
                     "avg_rating",
                     "rating_count",

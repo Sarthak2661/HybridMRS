@@ -40,6 +40,18 @@ def split_genres(value: str | float | None) -> list[str]:
     return [part for part in value.split("|") if part and part != "(no genres listed)"]
 
 
+def genres_from_indicator_columns(movies: pd.DataFrame) -> pd.Series:
+    genre_columns = [column for column in movies.columns if column.startswith("genre_")]
+    if not genre_columns:
+        return pd.Series([""] * len(movies), index=movies.index, dtype="string")
+
+    def collect_genres(row: pd.Series) -> str:
+        names = [column.removeprefix("genre_") for column in genre_columns if float(row[column]) > 0]
+        return "|".join(names)
+
+    return movies[genre_columns].fillna(0).apply(collect_genres, axis=1).astype("string")
+
+
 def parse_year(title: str) -> int | None:
     match = re.search(r"\((\d{4})\)", title or "")
     return int(match.group(1)) if match else None
@@ -108,9 +120,12 @@ def load_catalog() -> pd.DataFrame:
     if PROCESSED_FEATURES.exists():
         try:
             movies = pd.read_parquet(PROCESSED_FEATURES)
-            if "genres" not in movies.columns and MOVIES_CSV.exists():
-                raw_movies = pd.read_csv(MOVIES_CSV, dtype={"movieId": "int32", "title": "string", "genres": "string"})
-                movies = movies.merge(raw_movies[["movieId", "genres"]], on="movieId", how="left")
+            if "genres" not in movies.columns:
+                if MOVIES_CSV.exists():
+                    raw_movies = pd.read_csv(MOVIES_CSV, dtype={"movieId": "int32", "title": "string", "genres": "string"})
+                    movies = movies.merge(raw_movies[["movieId", "genres"]], on="movieId", how="left")
+                else:
+                    movies["genres"] = genres_from_indicator_columns(movies)
         except ImportError:
             movies = pd.read_csv(MOVIES_CSV, dtype={"movieId": "int32", "title": "string", "genres": "string"})
             movies = add_rating_stats(movies)
