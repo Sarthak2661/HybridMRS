@@ -13,6 +13,33 @@ A hybrid movie recommender built on MovieLens 32M, with an offline evaluation pi
 - Backend API: [https://hybridmrs.onrender.com](https://hybridmrs.onrender.com)
 - Health check: [https://hybridmrs.onrender.com/health](https://hybridmrs.onrender.com/health)
 
+## Why this project matters
+
+Many recommendation projects stop at a notebook or a single algorithm score. This one is designed to show the full shape of applied ML work:
+
+- a measurable offline evaluator instead of only a polished UI
+- a user-facing product demo instead of only training scripts
+- a clear distinction between benchmark metrics and live recommendation-list metrics
+- explainable ranking signals so a reviewer can inspect why the system made each suggestion
+- deployable frontend and backend services rather than a local-only prototype
+
+For a portfolio, that makes the project more representative of real recommender-system work: modeling, evaluation, serving, product decisions, and communication.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    A["MovieLens 32M raw data"] --> B["Feature engineering<br/>genres, ratings, popularity, metadata"]
+    B --> C["Offline evaluation pipeline<br/>CF SVD, content, popularity, genre, hybrid"]
+    C --> D["Saved benchmark artifacts<br/>CSV metrics, alpha tuning, figures"]
+    B --> E["Processed serving artifact<br/>ml32m_basic_movie_features.parquet"]
+    E --> F["FastAPI backend<br/>search, genres, recommend, feedback, metrics"]
+    D --> F
+    F --> G["React + Tailwind frontend<br/>onboarding, recommendations, controls, dashboard"]
+    G --> H["Deployed demo on Vercel"]
+    F --> I["Deployed API on Render"]
+```
+
 ## What this project includes
 
 - Collaborative filtering baseline with Surprise SVD
@@ -167,6 +194,20 @@ are committed and available in the deployed repo
 ### One practical note
 
 The current `scripts/run_backend.py` is now flexible enough for both local and hosted use because it reads `HOST` and `PORT` from environment variables, but for Render the direct `uvicorn ... --host 0.0.0.0 --port $PORT` start command is still the clearest production setup.
+
+## Portfolio release
+
+Current portfolio tag:
+
+- `v1.0-portfolio-demo`
+
+This release represents the first fully deployed portfolio version with:
+
+- live frontend and backend links
+- offline benchmark dashboard
+- hybrid recommendation demo
+- deployment-ready API setup
+- README documentation for local run and hosted deployment
 
 ## API overview
 
