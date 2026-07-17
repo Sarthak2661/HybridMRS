@@ -7,6 +7,12 @@
 
 A hybrid movie recommender built on MovieLens 32M, with an offline evaluation pipeline and a small full-stack demo for exploring the results.
 
+## Live demo
+
+- Frontend: [https://hybrid-mv971m3l8-ssmind.vercel.app](https://hybrid-mv971m3l8-ssmind.vercel.app)
+- Backend API: [https://hybridmrs.onrender.com](https://hybridmrs.onrender.com)
+- Health check: [https://hybridmrs.onrender.com/health](https://hybridmrs.onrender.com/health)
+
 ## What this project includes
 
 - Collaborative filtering baseline with Surprise SVD
